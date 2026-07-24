@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Petualangan Berhitung Ceria | SLB N 1 Pemalang 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka One', cursive, sans-serif;
+      font-size: 22px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #43e97b 100%);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Partikel bintang */
+    .particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      animation: floatUp 4s infinite ease-in;
+      opacity: 0.8;
+      box-shadow: 0 0 10px #fff;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* Awan dekoratif */
+    .cloud-decor {
+      position: fixed;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      box-shadow: 40px 20px 0 rgba(255,255,255,0.2), 70px 10px 0 rgba(255,255,255,0.15);
+      width: 120px; height: 50px;
+      animation: moveClouds 30s linear infinite;
+      z-index: 0;
+      backdrop-filter: blur(5px);
+    }
+    .cloud-decor:nth-child(1) { top: 10%; left: -150px; animation-duration: 35s; }
+    .cloud-decor:nth-child(2) { top: 30%; left: -200px; animation-duration: 28s; animation-delay: 8s; }
+    @keyframes moveClouds {
+      from { transform: translateX(0); } to { transform: translateX(110vw); }
+    }
+
+    /* Konten utama - Glassmorphism */
+    #app {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 650px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3), inset 0 0 30px rgba(255,255,255,0.1);
+      padding: 2rem 1.5rem;
+      color: #FFF;
+      max-height: 90vh;
+      overflow-y: auto;
+      margin: 0.5rem 0;
+    }
+
+    .screen { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+    .hidden { display: none !important; }
+
+    h1 {
+      font-size: 2em;
+      text-shadow: 0 0 20px rgba(255,255,255,0.5), 2px 2px 0 rgba(0,0,0,0.3);
+      letter-spacing: 2px;
+    }
+    .welcome-icons { font-size: 3rem; animation: float 3s infinite ease-in-out; filter: drop-shadow(0 0 15px #FFD700); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); }
+    }
+
+    /* Tombol dengan efek 3D dan glow */
+    button {
+      font-size: 1.1em;
+      font-family: inherit;
+      padding: 0.8em 1.6em;
+      border: none;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+      backdrop-filter: blur(10px);
+      color: #FFF;
+      cursor: pointer;
+      min-width: 200px;
+      margin: 0.4em;
+      border-radius: 60px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+    button:active {
+      transform: scale(0.95) translateY(3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    button:focus-visible {
+      outline: 3px solid #FFD700;
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #43e97b, #38f9d7);
+      color: #000;
+      font-size: 1.3em;
+      box-shadow: 0 10px 25px rgba(67, 233, 123, 0.4);
+    }
+    .btn-level {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-size: 1.2em;
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+    .btn-answer {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      font-size: 1.3em;
+      min-width: 140px;
+      padding: 1em;
+      box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+    }
+    .btn-answer:active {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      box-shadow: 0 0 30px #FFD700;
+    }
+    .btn-mic {
+      background: linear-gradient(135deg, #FF416C, #FF4B2B);
+      font-size: 1.2em;
+      animation: pulseMic 2s infinite;
+      box-shadow: 0 10px 25px rgba(255, 65, 108, 0.5);
+    }
+    @keyframes pulseMic {
+      0%, 100% { box-shadow: 0 0 15px rgba(255,65,108,0.5); }
+      50% { box-shadow: 0 0 35px rgba(255,65,108,0.8); }
+    }
+    .btn-mic.listening {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #000;
+      animation: none;
+      box-shadow: 0 0 40px #FFD700;
+    }
+    .btn-help { background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: #000; }
+    .btn-music { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .btn-music.on { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #000; }
+    .btn-contrast { background: linear-gradient(135deg, #434343, #000000); }
+    .buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; }
+
+    /* Game header */
+    .game-header {
+      display: flex; justify-content: space-between; width: 100%;
+      font-size: 1em;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      box-shadow: inset 0 0 15px rgba(255,255,255,0.1);
+    }
+    .progress-container {
+      width: 100%; height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      margin: 1em 0;
+      overflow: hidden;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .progress-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #FFD700, #FFA500, #FF6347);
+      border-radius: 15px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 15px #FFD700;
+    }
+
+    /* Kartu pertanyaan */
+    .question-card {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 30px;
+      padding: 1.5rem;
+      border: 2px solid rgba(255,255,255,0.2);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.05);
+    }
+    .question-text {
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #FFF;
+      text-shadow: 0 0 15px rgba(255,255,255,0.5);
+      margin-bottom: 0.5em;
+    }
+    .question-visual {
+      font-size: 2rem;
+      line-height: 1.5;
+      word-break: break-word;
+      color: #FFD700;
+      text-shadow: 0 0 10px rgba(255,215,0,0.5);
+    }
+    .mascot-container {
+      position: relative;
+      margin: 0.5em 0;
+    }
+    .mascot {
+      font-size: 3rem;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+    }
+    .mascot.happy {
+      animation: jump 0.6s ease;
+    }
+    @keyframes jump {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-30px); }
+      60% { transform: translateY(-15px); }
+    }
+    .mascot.sad {
+      filter: grayscale(1) drop-shadow(0 0 10px rgba(255,0,0,0.5));
+      transform: scale(0.9);
+    }
+    .mascot.thinking {
+      animation: wiggle 0.5s infinite;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(-5deg); }
+      75% { transform: rotate(5deg); }
+    }
+
+    .feedback {
+      font-size: 1.6em;
+      min-height: 2em;
+      font-weight: bold;
+      text-shadow: 0 0 20px rgba(255,255,255,0.6);
+    }
+    .feedback.correct { color: #FFD700; }
+    .feedback.wrong { color: #FF6B6B; }
+
+    .game-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+    .btn-control {
+      font-size: 0.85em; padding: 0.5em 1em; min-width: auto;
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .mic-status {
+      font-size: 0.85em;
+      min-height: 1.2em;
+      color: #FFD700;
+      text-shadow: 0 0 10px rgba(255,215,0,0.5);
+    }
+    .copyright {
+      font-size: 0.7em;
+      opacity: 0.8;
+      margin-top: 1em;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); border: 0;
+    }
+
+    @media (max-width: 500px) {
+      body { font-size: 18px; }
+      button { min-width: 140px; padding: 0.6em 1.2em; }
+      .btn-answer { min-width: 100px; font-size: 1.1em; }
+      .question-text { font-size: 1.4em; }
+      .question-visual { font-size: 1.5rem; }
+      .mascot { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Partikel bintang -->
+  <div class="particles" id="particles" aria-hidden="true"></div>
+
+  <!-- Awan dekoratif -->
+  <div class="cloud-decor" aria-hidden="true"></div>
+  <div class="cloud-decor" aria-hidden="true"></div>
+
+  <div id="app" role="main">
+    <!-- WELCOME SCREEN -->
+    <section id="start-screen" class="screen" aria-label="Menu utama">
+      <div class="welcome-icons" aria-hidden="true">🌟🐒⭐🌿🦜🌟</div>
+      <h1>Petualangan Berhitung Ceria<br><small style="font-size:0.7em;">Jelajah Hutan Angka</small></h1>
+      <p style="font-size:1.1em; text-shadow: 0 0 10px rgba(255,255,255,0.3);"><strong>Klik level untuk mulai petualangan!</strong></p>
+      <div class="buttons" role="group" aria-label="Pilihan level">
+        <button id="btn-level1" class="btn-level">🌱 Level 1 (1–10)</button>
+        <button id="btn-level2" class="btn-level">🌿 Level 2 (1–20)</button>
+        <button id="btn-level3" class="btn-level">🌳 Level 3 (Campuran)</button>
+      </div>
+      <div class="buttons">
+        <button id="btn-help" class="btn-help">❓ Cara Bermain</button>
+        <button id="btn-music-welcome" class="btn-music on">🎵 Musik: ON</button>
+        <button id="btn-settings" class="btn-secondary">⚙ Pengaturan Suara</button>
+        <button id="btn-contrast" class="btn-contrast">🔲 Mode Kontras</button>
+        <button id="btn-history" class="btn-secondary">📋 Riwayat Skor</button>
+        <button id="btn-fullscreen" class="btn-secondary">🖥 Layar Penuh</button>
+      </div>
+      <div class="copyright">© 2026 SLB NEGERI 1 PEMALANG</div>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="game-screen" class="screen hidden" aria-live="assertive">
+      <div class="game-header">
+        <span id="level-indicator">🌱 Level 1</span>
+        <span id="score-display">⭐ Skor: 0</span>
+      </div>
+      <div class="progress-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+
+      <!-- Kartu pertanyaan -->
+      <div class="question-card" role="alert">
+        <div class="question-text" id="question-text"></div>
+        <div class="question-visual" id="question-visual" aria-hidden="true"></div>
+        <div class="mascot-container">
+          <span id="mascot" class="mascot">🐒</span>
+        </div>
+      </div>
+
+      <!-- Tombol jawaban -->
+      <div class="buttons" role="group" aria-label="Pilihan jawaban">
+        <button id="btn-ans1" class="btn-answer"><span id="opt1-text"></span></button>
+        <button id="btn-ans2" class="btn-answer"><span id="opt2-text"></span></button>
+        <button id="btn-ans3" class="btn-answer"><span id="opt3-text"></span></button>
+      </div>
+
+      <!-- Tombol mikrofon -->
+      <button id="btn-mic" class="btn-mic">🎤 Jawab Pakai Suara</button>
+      <div class="mic-status" id="mic-status"></div>
+
+      <div class="feedback" id="feedback-text" role="alert"></div>
+      <div class="game-controls">
+        <button id="btn-repeat" class="btn-control">🔄 Ulangi Soal</button>
+        <button id="btn-pause" class="btn-control">⏯ Jeda</button>
+        <button id="btn-music-game" class="btn-control btn-music on">🎵 Musik</button>
+        <button id="btn-back" class="btn-control">🚪 Kembali</button>
+        <button id="btn-restart" class="btn-control">🔁 Ulang</button>
+      </div>
+    </section>
+
+    <!-- RESULT SCREEN -->
+    <section id="result-screen" class="screen hidden" aria-live="assertive">
+      <div class="welcome-icons" aria-hidden="true">🏆🎉🌟</div>
+      <h2>Permainan Selesai!</h2>
+      <div id="final-score" style="font-size:1.8em; text-shadow: 0 0 20px #FFD700;"></div>
+      <div class="buttons">
+        <button id="btn-replay" class="btn-primary">🔁 Main Lagi</button>
+        <button id="btn-history2" class="btn-secondary">📋 Riwayat Skor</button>
+        <button id="btn-exit2" class="btn-secondary">🚪 Kembali ke Menu</button>
+      </div>
+      <div class="copyright">© 2026 SLB NEGERI 1 PEMALANG</div>
+    </section>
+    <div id="sr-announcement" class="sr-only" aria-live="polite"></div>
+  </div>
+
+  <script>
+    (function() {
+      // Buat partikel
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 40; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 4 + 's';
+        particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        particle.style.width = (Math.random() * 5 + 2) + 'px';
+        particle.style.height = particle.style.width;
+        particlesContainer.appendChild(particle);
+      }
+
+      // DOM
+      const startScreen = document.getElementById('start-screen');
+      const gameScreen = document.getElementById('game-screen');
+      const resultScreen = document.getElementById('result-screen');
+      const questionText = document.getElementById('question-text');
+      const questionVisual = document.getElementById('question-visual');
+      const feedbackText = document.getElementById('feedback-text');
+      const scoreDisplay = document.getElementById('score-display');
+      const levelIndicator = document.getElementById('level-indicator');
+      const progressBar = document.getElementById('progress-bar');
+      const finalScoreDiv = document.getElementById('final-score');
+      const mascot = document.getElementById('mascot');
+      const micBtn = document.getElementById('btn-mic');
+      const micStatus = document.getElementById('mic-status');
+
+      const levelConfig = {
+        1: { total: 5, range: { min: 1, max: 10 }, name: 'Level 1', icon: '🌱' },
+        2: { total: 5, range: { min: 1, max: 20 }, name: 'Level 2', icon: '🌿' },
+        3: { total: 10, range: { min: 1, max: 20 }, name: 'Level 3', icon: '🌳' }
+      };
+
+      const visualEmojis = ['🍎', '🐒', '⭐', '🌻', '🍊', '🐸', '🌸', '🐘', '🦋', '🍇'];
+      const praiseMessages = [
+        'Kerja bagus!', 'Kamu keren!', 'Hebat!', 'Pintar!', 'Luar biasa!',
+        'Mantap!', 'Kamu hebat!', 'Perfect!', 'Jenius!', 'Bintang!'
+      ];
+      const encourageMessages = [
+        'Ayo coba lagi!', 'Semangat!', 'Tidak apa-apa!', 'Hampir benar!',
+        'Coba sekali lagi!', 'Kamu pasti bisa!', 'Jangan menyerah!'
+      ];
+
+      let gameState = {
+        currentLevel: 1, currentQuestionIndex: 0, score: 0,
+        questions: [], active: false, paused: false,
+        answeringAllowed: false, consecutiveWrong: 0, originalRange: null
+      };
+      let usedPairs = new Set();
+      let speechQueue = [], isSpeaking = false;
+      let speechVolume = 1.0, speechRate = 1.0;
+      let audioCtx = null, bgMusicPlaying = false, bgMusicGainNode = null;
+      const SCORE_HISTORY_KEY = 'berhitungCeria_scores';
+
+      // ====== AUDIO ======
+      function initAudioContext() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+      }
+      function startBgMusic() {
+        if (bgMusicPlaying || !audioCtx) return;
+        bgMusicPlaying = true;
+        bgMusicGainNode = audioCtx.createGain();
+        bgMusicGainNode.gain.value = 0.06;
+        bgMusicGainNode.connect(audioCtx.destination);
+        function playMelody() {
+          if (!bgMusicPlaying) return;
+          const now = audioCtx.currentTime;
+          const notes = [
+            { freq: 392, dur: 0.25 }, { freq: 523.25, dur: 0.25 },
+            { freq: 659.25, dur: 0.25 }, { freq: 523.25, dur: 0.25 },
+            { freq: 392, dur: 0.25 }, { freq: 440, dur: 0.25 },
+            { freq: 523.25, dur: 0.5 }
+          ];
+          let time = now;
+          notes.forEach(n => {
+            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.type = 'triangle'; osc.frequency.value = n.freq;
+            gain.gain.setValueAtTime(0.1, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + n.dur);
+            osc.connect(gain).connect(bgMusicGainNode);
+            osc.start(time); osc.stop(time + n.dur + 0.05);
+            time += n.dur;
+          });
+          setTimeout(playMelody, notes.reduce((s,n)=>s+n.dur,0)*1000);
+        }
+        playMelody();
+      }
+      function stopBgMusic() { bgMusicPlaying = false; if (bgMusicGainNode) { bgMusicGainNode.disconnect(); bgMusicGainNode = null; } }
+      function toggleBgMusic() {
+        if (bgMusicPlaying) stopBgMusic(); else startBgMusic();
+        updateMusicButtons();
+        speak(bgMusicPlaying ? 'Musik latar dinyalakan.' : 'Musik latar dimatikan.');
+      }
+      function updateMusicButtons() {
+        ['btn-music-welcome','btn-music-game'].forEach(id => {
+          const b = document.getElementById(id);
+          if (b) {
+            b.textContent = bgMusicPlaying ? '🎵 Musik: ON' : '🎵 Musik: OFF';
+            b.classList.toggle('on', bgMusicPlaying);
+          }
+        });
+      }
+      function playCorrectSound() {
+        if (!audioCtx) return;
+        [523.25, 659.25, 783.99].forEach((f,i) => {
+          const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+          osc.type = 'sine'; osc.frequency.value = f;
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i*0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.1+0.15);
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + i*0.1); osc.stop(audioCtx.currentTime + i*0.1+0.2);
+        });
+      }
+      function playWrongSound() {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.value = 200;
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+      }
+      function playApplause() {
+        if (!audioCtx) return;
+        const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.6, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i=0;i<data.length;i++) data[i]=Math.random()*2-1;
+        const src = audioCtx.createBufferSource(); src.buffer = buf;
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.6);
+        src.connect(gain).connect(audioCtx.destination);
+        src.start(); src.stop(audioCtx.currentTime+0.6);
+      }
+
+      // ====== SPEECH ======
+      function speak(text, cb) {
+        speechQueue.push({text, cb});
+        if (!isSpeaking) processQueue();
+      }
+      function processQueue() {
+        if (!speechQueue.length) { isSpeaking = false; return; }
+        isSpeaking = true;
+        const {text, cb} = speechQueue.shift();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'id-ID'; u.volume = speechVolume; u.rate = speechRate;
+        u.onend = () => { if(cb) cb(); processQueue(); };
+        u.onerror = () => processQueue();
+        window.speechSynthesis.speak(u);
+      }
+      function cancelAllSpeech() { window.speechSynthesis.cancel(); speechQueue = []; isSpeaking = false; }
+      function pauseSpeech() { window.speechSynthesis.pause(); }
+      function resumeSpeech() { window.speechSynthesis.resume(); }
+
+      // ====== HELPERS ======
+      function numberToWords(n) {
+        const w = ['nol','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan','sepuluh','sebelas','dua belas','tiga belas','empat belas','lima belas','enam belas','tujuh belas','delapan belas','sembilan belas','dua puluh'];
+        if (n <= 20) return w[n];
+        const puluhan = Math.floor(n/10), satuan = n%10;
+        if (puluhan === 2) return 'dua puluh ' + w[satuan];
+        if (puluhan === 3) return 'tiga puluh ' + w[satuan];
+        return n.toString();
+      }
+      function shuffle(arr) { for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+      function rand(min,max) { return Math.floor(Math.random()*(max-min+1))+min; }
+      function getRandomEmoji() { return visualEmojis[Math.floor(Math.random() * visualEmojis.length)]; }
+
+      function adjustDifficulty() {
+        if (gameState.consecutiveWrong >= 2) {
+          const lvl = gameState.currentLevel;
+          const baseRange = gameState.originalRange || levelConfig[lvl].range;
+          gameState.originalRange = gameState.originalRange || baseRange;
+          let newMax = Math.max(5, baseRange.max - 4);
+          levelConfig[lvl].range = { min: 1, max: newMax };
+          speak('Soal disesuaikan agar lebih mudah. Tetap semangat ya!');
+        } else if (gameState.consecutiveWrong === 0 && gameState.originalRange) {
+          const lvl = gameState.currentLevel;
+          levelConfig[lvl].range = gameState.originalRange;
+          gameState.originalRange = null;
+        }
+      }
+
+      function generateQuestionsForLevel(level) {
+        const {total, range} = levelConfig[level];
+        const qs = []; let tries=0;
+        while (qs.length < total && tries<500) {
+          const a=rand(range.min,range.max), b=rand(range.min,range.max);
+          if (a+b>20) { tries++; continue; }
+          const key = a<b ? `${a},${b}` : `${b},${a}`;
+          if (usedPairs.has(key)) { tries++; continue; }
+          const correct=a+b, wrongs=new Set();
+          while (wrongs.size<2) {
+            let offset=rand(-3,3); if(offset===0) offset=1;
+            let val=correct+offset; if(val<1) val=1; if(val===correct) val=correct+1;
+            wrongs.add(val);
+          }
+          qs.push({a, b, correct, options: shuffle([correct, ...Array.from(wrongs)])});
+          usedPairs.add(key); tries=0;
+        }
+        return qs;
+      }
+
+      function showScreen(screen) {
+        startScreen.classList.add('hidden');
+        gameScreen.classList.add('hidden');
+        resultScreen.classList.add('hidden');
+        screen.classList.remove('hidden');
+      }
+      function updateUI() {
+        const level=gameState.currentLevel, total=levelConfig[level].total, curr=gameState.currentQuestionIndex;
+        scoreDisplay.textContent=`⭐ Skor: ${gameState.score}`;
+        levelIndicator.textContent=`${levelConfig[level].icon} Level ${level}`;
+        progressBar.style.width=`${Math.round((curr/total)*100)}%`;
+        progressBar.parentElement.setAttribute('aria-valuenow', curr);
+        progressBar.parentElement.setAttribute('aria-valuemax', total);
+      }
+
+      function presentQuestion() {
+        if (gameState.currentQuestionIndex >= levelConfig[gameState.currentLevel].total) { endLevel(); return; }
+        const q = gameState.questions[gameState.currentQuestionIndex];
+        const aWord = numberToWords(q.a), bWord = numberToWords(q.b);
+        questionText.textContent = `${aWord} + ${bWord} = ?`;
+        const emoji = getRandomEmoji();
+        questionVisual.innerHTML = `${new Array(q.a).fill(emoji).join('')}  +  ${new Array(q.b).fill(emoji).join('')}  =  ❓`;
+
+        document.getElementById('opt1-text').textContent = numberToWords(q.options[0]);
+        document.getElementById('opt2-text').textContent = numberToWords(q.options[1]);
+        document.getElementById('opt3-text').textContent = numberToWords(q.options[2]);
+
+        feedbackText.textContent = '';
+        feedbackText.className = 'feedback';
+        mascot.className = 'mascot thinking';
+        updateUI();
+        gameState.answeringAllowed = false;
+        cancelAllSpeech();
+
+        const questionStr = `Berapa hasil ${aWord} ditambah ${bWord}?`;
+        let optStr = '';
+        q.options.forEach((opt, idx) => optStr += `Pilihan ${idx+1}: ${numberToWords(opt)}. `);
+        speak(questionStr, () => speak(optStr, () => {
+          gameState.answeringAllowed = true;
+          mascot.className = 'mascot';
+        }));
+      }
+
+      function handleAnswer(idx) {
+        if (!gameState.active || gameState.paused || !gameState.answeringAllowed) return;
+        const q = gameState.questions[gameState.currentQuestionIndex];
+        const correct = q.options[idx] === q.correct;
+        gameState.answeringAllowed = false;
+        cancelAllSpeech();
+
+        if (correct) {
+          gameState.score += 10;
+          gameState.consecutiveWrong = 0;
+          playCorrectSound();
+          const msg = praiseMessages[Math.floor(Math.random() * praiseMessages.length)];
+          feedbackText.textContent = '✅ ' + msg;
+          feedbackText.className = 'feedback correct';
+          mascot.className = 'mascot happy';
+          speak(msg);
+          adjustDifficulty();
+          // Efek confetti sederhana
+          createConfetti();
+        } else {
+          gameState.consecutiveWrong++;
+          playWrongSound();
+          const msg = encourageMessages[Math.floor(Math.random() * encourageMessages.length)];
+          feedbackText.textContent = '❌ ' + msg;
+          feedbackText.className = 'feedback wrong';
+          mascot.className = 'mascot sad';
+          speak(msg);
+          adjustDifficulty();
+        }
+        updateUI();
+        setTimeout(() => {
+          if (!gameState.active) return;
+          mascot.className = 'mascot';
+          gameState.currentQuestionIndex++;
+          presentQuestion();
+        }, 2000);
+      }
+
+      // Efek confetti saat benar
+      function createConfetti() {
+        const colors = ['#FFD700','#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEAA7'];
+        for (let i = 0; i < 20; i++) {
+          const confetti = document.createElement('div');
+          confetti.style.cssText = `
+            position: fixed; top: 50%; left: 50%; width: 10px; height: 10px;
+            background: ${colors[Math.floor(Math.random()*colors.length)]};
+            border-radius: 50%; pointer-events: none; z-index: 999;
+            animation: confettiFall ${Math.random()*1+0.5}s ease-out forwards;
+            transform: translate(-50%, -50%) rotate(${Math.random()*360}deg)
+                       translate(${Math.random()*200-100}px, ${Math.random()*200-100}px);
+          `;
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 1500);
+        }
+      }
+
+      // ====== VOICE RECOGNITION ======
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      let recognition = null;
+      if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'id-ID';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+      }
+
+      function startVoiceInput() {
+        if (!recognition) { speak('Maaf, fitur suara tidak didukung. Gunakan tombol jawaban.'); return; }
+        if (!gameState.answeringAllowed || gameState.paused) return;
+
+        micBtn.classList.add('listening');
+        micBtn.textContent = '🎤 Mendengarkan...';
+        micStatus.textContent = '🎙️ Ucapkan jawabanmu...';
+        recognition.start();
+
+        recognition.onresult = (event) => {
+          const spoken = event.results[0][0].transcript.toLowerCase().trim();
+          micStatus.textContent = `🗣️ "${spoken}"`;
+          processVoiceAnswer(spoken);
+        };
+        recognition.onerror = () => { micStatus.textContent = '❌ Coba lagi.'; stopVoiceInput(); };
+        recognition.onend = () => { stopVoiceInput(); };
+      }
+
+      function stopVoiceInput() {
+        if (recognition) try { recognition.stop(); } catch(e) {}
+        micBtn.classList.remove('listening');
+        micBtn.textContent = '🎤 Jawab Pakai Suara';
+        setTimeout(() => { if (!micBtn.classList.contains('listening')) micStatus.textContent = ''; }, 2000);
+      }
+
+      function processVoiceAnswer(spoken) {
+        if (!gameState.answeringAllowed) return;
+        const q = gameState.questions[gameState.currentQuestionIndex];
+        const spokenNumber = parseWordsToNumber(spoken);
+        if (spokenNumber !== null) {
+          const matchIdx = q.options.findIndex(opt => opt === spokenNumber);
+          if (matchIdx >= 0) { handleAnswer(matchIdx); return; }
+        }
+        speak(`Maaf, "${spoken}" tidak dikenali. Coba klik tombol atau ucapkan lagi.`);
+      }
+
+      function parseWordsToNumber(text) {
+        const wordMap = {
+          'nol':0,'satu':1,'dua':2,'tiga':3,'empat':4,'lima':5,'enam':6,'tujuh':7,
+          'delapan':8,'sembilan':9,'sepuluh':10,'sebelas':11,'dua belas':12,
+          'tiga belas':13,'empat belas':14,'lima belas':15,'enam belas':16,
+          'tujuh belas':17,'delapan belas':18,'sembilan belas':19,'dua puluh':20
+        };
+        text = text.replace(/[.,?!]/g,'').trim();
+        if (wordMap[text] !== undefined) return wordMap[text];
+        const num = parseInt(text);
+        if (!isNaN(num) && num>=0 && num<=20) return num;
+        return null;
+      }
+
+      // ====== GAME FLOW ======
+      function startGame(level) {
+        initAudioContext();
+        gameState = {
+          currentLevel: level, currentQuestionIndex: 0, score: 0,
+          questions: [], active: true, paused: false,
+          answeringAllowed: false, consecutiveWrong: 0, originalRange: null
+        };
+        usedPairs.clear();
+        showScreen(gameScreen);
+        gameState.questions = generateQuestionsForLevel(level);
+        if (!bgMusicPlaying) startBgMusic();
+        updateMusicButtons();
+        speak(`Level ${level} dimulai!`, () => { updateUI(); presentQuestion(); });
+      }
+
+      function endLevel() {
+        if (gameState.currentLevel < 3) {
+          const next = gameState.currentLevel+1;
+          speak(`Level selesai! Skor ${gameState.score}. Lanjut ke level ${next}!`);
+          setTimeout(() => {
+            gameState.currentLevel = next; gameState.currentQuestionIndex = 0;
+            gameState.consecutiveWrong = 0; gameState.originalRange = null;
+            gameState.questions = generateQuestionsForLevel(next);
+            speak(`Level ${next} dimulai!`, () => { updateUI(); presentQuestion(); });
+          }, 3000);
+        } else endGame();
+      }
+
+      function endGame() {
+        gameState.active = false;
+        showScreen(resultScreen);
+        finalScoreDiv.textContent = `⭐ Skor Akhir: ${gameState.score}`;
+        cancelAllSpeech();
+        speak(`Permainan selesai! Skor akhir kamu ${gameState.score}. Luar biasa!`);
+        playApplause();
+        saveScore(gameState.score);
+        stopBgMusic(); updateMusicButtons();
+      }
+
+      function backToMenu() {
+        if (gameState.active || gameState.paused) {
+          gameState.active = false; gameState.paused = false;
+          cancelAllSpeech(); stopVoiceInput();
+          if (bgMusicPlaying) stopBgMusic();
+          updateMusicButtons();
+          showScreen(startScreen);
+          speak('Kembali ke menu utama.');
+        }
+      }
+
+      function restartGame() {
+        cancelAllSpeech(); stopVoiceInput();
+        gameState.active = false;
+        startGame(gameState.currentLevel);
+      }
+
+      function togglePause() {
+        if (!gameState.active) return;
+        if (gameState.paused) {
+          gameState.paused = false; resumeSpeech();
+          if (bgMusicPlaying) startBgMusic();
+          speak('Lanjut!');
+        } else {
+          gameState.paused = true; pauseSpeech(); cancelAllSpeech(); stopVoiceInput();
+          if (bgMusicPlaying) stopBgMusic();
+          speak('Jeda.');
+        }
+        updateMusicButtons();
+      }
+
+      function showHelp() {
+        cancelAllSpeech();
+        speak('Cara bermain: Klik level untuk mulai. Dengarkan soal, lalu klik jawaban atau tekan mikrofon dan ucapkan jawabanmu. Semangat!');
+      }
+
+      function openSettings() {
+        cancelAllSpeech();
+        const panel = document.createElement('div');
+        panel.id = 'settings-panel';
+        panel.style.cssText = 'display:flex;flex-wrap:wrap;gap:0.5em;justify-content:center;margin-top:1em;';
+        panel.innerHTML = `
+          <button class="btn-control" id="volUp">🔊 Volume +</button>
+          <button class="btn-control" id="volDown">🔉 Volume -</button>
+          <button class="btn-control" id="rateUp">🐇 Cepat +</button>
+          <button class="btn-control" id="rateDown">🐢 Lambat -</button>
+          <button class="btn-primary" id="closeSettings">✅ Selesai</button>
+        `;
+        document.getElementById('game-screen').appendChild(panel);
+
+        document.getElementById('volUp').addEventListener('click', ()=>{
+          speechVolume = Math.min(1, speechVolume+0.1);
+          speak(`Volume ${Math.round(speechVolume*100)}%`);
+        });
+        document.getElementById('volDown').addEventListener('click', ()=>{
+          speechVolume = Math.max(0, speechVolume-0.1);
+          speak(`Volume ${Math.round(speechVolume*100)}%`);
+        });
+        document.getElementById('rateUp').addEventListener('click', ()=>{
+          speechRate = Math.min(2, speechRate+0.1);
+          speak(`Kecepatan ${speechRate.toFixed(1)}x`);
+        });
+        document.getElementById('rateDown').addEventListener('click', ()=>{
+          speechRate = Math.max(0.5, speechRate-0.1);
+          speak(`Kecepatan ${speechRate.toFixed(1)}x`);
+        });
+        document.getElementById('closeSettings').addEventListener('click', ()=>{
+          panel.remove();
+          speak('Pengaturan selesai.');
+        });
+        speak('Atur volume dan kecepatan suara.');
+      }
+
+      function saveScore(score) {
+        const h = JSON.parse(localStorage.getItem(SCORE_HISTORY_KEY)||'[]');
+        h.push({date: new Date().toLocaleDateString('id-ID'), score});
+        if(h.length>10) h.shift();
+        localStorage.setItem(SCORE_HISTORY_KEY, JSON.stringify(h));
+      }
+      function showHistory() {
+        const h = JSON.parse(localStorage.getItem(SCORE_HISTORY_KEY)||'[]');
+        if(!h.length) { speak('Belum ada riwayat skor.'); return; }
+        let msg='Riwayat skor: '; h.forEach((x,i)=>msg+=`${i+1}. ${x.date} skor ${x.score}. `);
+        speak(msg);
+      }
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(()=>speak('Layar penuh.')).catch(()=>speak('Tidak didukung.'));
+        else document.exitFullscreen().then(()=>speak('Layar normal.'));
+      }
+      function toggleContrast() {
+        document.body.classList.toggle('high-contrast');
+        const isHigh = document.body.classList.contains('high-contrast');
+        speak(isHigh ? 'Mode kontras tinggi.' : 'Mode normal.');
+        document.getElementById('btn-contrast').textContent = isHigh ? '🔲 Kontras Normal' : '🔲 Mode Kontras';
+      }
+
+      // Event listeners
+      document.getElementById('btn-level1').addEventListener('click', ()=>startGame(1));
+      document.getElementById('btn-level2').addEventListener('click', ()=>startGame(2));
+      document.getElementById('btn-level3').addEventListener('click', ()=>startGame(3));
+      document.getElementById('btn-help').addEventListener('click', showHelp);
+      document.getElementById('btn-music-welcome').addEventListener('click', toggleBgMusic);
+      document.getElementById('btn-settings').addEventListener('click', openSettings);
+      document.getElementById('btn-contrast').addEventListener('click', toggleContrast);
+      document.getElementById('btn-history').addEventListener('click', showHistory);
+      document.getElementById('btn-fullscreen').addEventListener('click', toggleFullscreen);
+      document.getElementById('btn-replay').addEventListener('click', restartGame);
+      document.getElementById('btn-history2').addEventListener('click', showHistory);
+      document.getElementById('btn-exit2').addEventListener('click', ()=>{ showScreen(startScreen); speak('Kembali ke menu.'); });
+      document.getElementById('btn-repeat').addEventListener('click', ()=>{ if(gameState.active&&!gameState.paused&&gameState.answeringAllowed){ cancelAllSpeech(); presentQuestion(); } });
+      document.getElementById('btn-pause').addEventListener('click', togglePause);
+      document.getElementById('btn-music-game').addEventListener('click', toggleBgMusic);
+      document.getElementById('btn-back').addEventListener('click', backToMenu);
+      document.getElementById('btn-restart').addEventListener('click', restartGame);
+      document.getElementById('btn-ans1').addEventListener('click', ()=>handleAnswer(0));
+      document.getElementById('btn-ans2').addEventListener('click', ()=>handleAnswer(1));
+      document.getElementById('btn-ans3').addEventListener('click', ()=>handleAnswer(2));
+      micBtn.addEventListener('click', startVoiceInput);
+
+      window.addEventListener('load', ()=>{
+        document.getElementById('btn-level1').focus();
+        initAudioContext();
+        setTimeout(()=> speak('Selamat datang di Petualangan Berhitung Ceria! Klik level untuk mulai petualanganmu!'), 600);
+      });
+    })();
+  </script>
+</body>
+</html>
